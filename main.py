@@ -22,13 +22,16 @@ class InsuranceRate(Model):
 class InsuranceRateResponse(BaseModel):
     rate: float
 
-@app.get('/insurance/{date}/{cargo_type}')
-async def calculate_insurance_cost(date: str, cargo_type: str):
-    date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+@app.get('/insurance/{date}/{cargo_type}/{declared_value}')
+async def calculate_insurance_cost(date: str, cargo_type: str, declared_value:float):
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+    except:
+        return {'error': 'Incorrect date'}
     object = await InsuranceRate.filter(cargo_type=cargo_type, effective_date=date_obj).first()
     if object:
-        return {"rate":object.rate}
-    return {'error': 'Для указанного типа груза и даты не найден тариф'}
+        return {"insurance_cost":float(object.rate) * declared_value}
+    return {'error': 'No tariff was found for the specified cargo type and date'}
 
 
 @app.on_event('startup')

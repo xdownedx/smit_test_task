@@ -24,18 +24,19 @@
 
 REST API предоставляет следующий эндпоинт:
 
-- `GET /insurance/{date}/{cargo_type}`: Расчитывает стоимость страхования на основе указанной даты и типа груза.
+- `GET /insurance/{date}/{cargo_type}{declared_value}`: Расчитывает стоимость страхования на основе указанной даты и типа груза.
 
   - `date`: Дата в формате `ГГГГ-ММ-ДД`.
   - `cargo_type`: Тип груза.
+  - `declared_value`: Объявленная стоимость
 
-  Пример запроса: `GET /insurance/2023-07-13/Glass`
+  Пример запроса: `GET /insurance/2023-07-13/Glass/100`
 
   Пример ответа:
 
   ```json
   {
-    "rate": 0.035
+    "insurance_cost":3.5000000000000004
   }
   ```
 
@@ -43,7 +44,7 @@ REST API предоставляет следующий эндпоинт:
 
   ```json
   {
-    "error": "Для указанного типа груза и даты не найден тариф"
+    "error": "No tariff was found for the specified cargo type and date"
   }
   ```
 
